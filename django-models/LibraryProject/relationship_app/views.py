@@ -30,9 +30,9 @@ def register_user(request):
             user = form.save()
             login(request, user)
             return redirect('book_list')
-        else:
-            user = UserCreationForm()
-        return render(request, 'registration/register.html', {'form': form})
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
     
 def login_user(request):
     if request.method == 'POST':
