@@ -5,8 +5,7 @@ author = Author.objects.get(name='J.K. Rowling')
 books = Book.objects.filter(author=author)
 
 # list all books in a library
-library = Library.objects.get(name='Main')
-books = library.books.all()
+Library.objects.get(name=library_name).books.all()
 
 # retrieve the librarian for a library
 library = Library.objects.get(name='Main')
