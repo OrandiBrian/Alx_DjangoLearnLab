@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
+from .decorators import role_required
 
 # Function based view
 def list_books(request):
@@ -22,7 +23,8 @@ class LibraryDetailView(DetailView):
         # add library books to the context
         context['books'] = self.objects.books.all()
         return context
-    
+
+# register user   
 def register_user(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -33,7 +35,8 @@ def register_user(request):
     else:
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
-    
+
+# login user 
 def login_user(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -48,3 +51,25 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
+
+# User roles
+@role_required('ADMIN')
+def admin_view(request):
+    return render(request, 'admin_dashboard.html', {
+        'title': 'Admin Dashboard',
+        'message': 'Welcome to the Admin Dashboard'
+    })
+
+@role_required('LIBRARIAN')
+def librarian_view(request):
+    return render(request, 'librarian_dashboard.html', {
+        'title': 'Librarian Dashboard',
+        'message': 'Welcome to the Librarian Dashboard'
+    })
+
+@role_required('MEMBER')
+def member_view(request):
+    return render(request, 'member_dashboard.html', {
+        'title': 'Member Dashboard',
+        'message': 'Welcome to the Member Dashboard'
+    })
