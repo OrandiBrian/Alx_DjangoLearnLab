@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 from .decorators import role_required
+from django.contrib.auth.decorators import user_passes_test
 
 # Function based view
 def list_books(request):
@@ -52,24 +53,48 @@ def logout_user(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
-# User roles
-@role_required('ADMIN')
+# # User roles
+# @role_required('ADMIN')
+# def admin_view(request):
+#     return render(request, 'admin_dashboard.html', {
+#         'title': 'Admin Dashboard',
+#         'message': 'Welcome to the Admin Dashboard'
+#     })
+
+# @role_required('LIBRARIAN')
+# def librarian_view(request):
+#     return render(request, 'librarian_dashboard.html', {
+#         'title': 'Librarian Dashboard',
+#         'message': 'Welcome to the Librarian Dashboard'
+#     })
+
+# @role_required('MEMBER')
+# def member_view(request):
+#     return render(request, 'member_dashboard.html', {
+#         'title': 'Member Dashboard',
+#         'message': 'Welcome to the Member Dashboard'
+#     })
+
+# admin_view
+def is_admin(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+@user_passes_test(is_admin)
 def admin_view(request):
-    return render(request, 'admin_dashboard.html', {
-        'title': 'Admin Dashboard',
-        'message': 'Welcome to the Admin Dashboard'
-    })
+    return render(request, 'admin_dashboard.html')
 
-@role_required('LIBRARIAN')
+# librarian_view
+def is_librarian(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+@user_passes_test(is_librarian)
 def librarian_view(request):
-    return render(request, 'librarian_dashboard.html', {
-        'title': 'Librarian Dashboard',
-        'message': 'Welcome to the Librarian Dashboard'
-    })
+    return render(request, 'librarian_dashboard.html')
 
-@role_required('MEMBER')
+# member_view
+def is_member(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
+@user_passes_test(is_member)
 def member_view(request):
-    return render(request, 'member_dashboard.html', {
-        'title': 'Member Dashboard',
-        'message': 'Welcome to the Member Dashboard'
-    })
+    return render(request, 'member_dashboard.html')

@@ -7,7 +7,7 @@ def role_required(role):
         def wrapped(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect('login')
-            if request.user.userprofile.role == role:
+            if request.user.UserProfile.role == role:
                 return view_func(request, *args, **kwargs)
             raise PermissionDenied
         return wrapped
