@@ -5,8 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
-from .decorators import role_required
-from django.contrib.auth.decorators import user_passes_test
+
 
 # Function based view
 def list_books(request):
@@ -74,27 +73,3 @@ def logout_user(request):
 #         'title': 'Member Dashboard',
 #         'message': 'Welcome to the Member Dashboard'
 #     })
-
-# admin_view
-def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
-
-@user_passes_test(is_admin)
-def admin_view(request):
-    return render(request, 'admin_dashboard.html')
-
-# librarian_view
-def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
-
-@user_passes_test(is_librarian)
-def librarian_view(request):
-    return render(request, 'librarian_dashboard.html')
-
-# member_view
-def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
-
-@user_passes_test(is_member)
-def member_view(request):
-    return render(request, 'member_dashboard.html')
