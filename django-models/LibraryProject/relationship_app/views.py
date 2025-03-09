@@ -48,32 +48,15 @@ def login_user(request):
             return redirect('book_list')  # Redirect to your books page after login
     return render(request, 'relationship_app/login.html')
 
-@login_required
+# logout user
 def logout_user(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
-# # User roles
-# @role_required('ADMIN')
-# def admin_view(request):
-#     return render(request, 'admin_dashboard.html', {
-#         'title': 'Admin Dashboard',
-#         'message': 'Welcome to the Admin Dashboard'
-#     })
-
-# @role_required('LIBRARIAN')
-# def librarian_view(request):
-#     return render(request, 'librarian_dashboard.html', {
-#         'title': 'Librarian Dashboard',
-#         'message': 'Welcome to the Librarian Dashboard'
-#     })
-
-# @role_required('MEMBER')
-# def member_view(request):
-#     return render(request, 'member_dashboard.html', {
-#         'title': 'Member Dashboard',
-#         'message': 'Welcome to the Member Dashboard'
-#     })
+@login_required
+def logout_user(request):
+    logout(request)
+    return render(request, 'relationship_app/logout.html')
 
 # Helper functions to check roles
 def is_admin(user):
@@ -86,17 +69,20 @@ def is_member(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 # Admin view
+@login_required
 @user_passes_test(is_admin)
 def admin_view(request):
     # return render(request, 'admin_dashboard.html')
     return HttpResponse("Welcome to the Admin Dashboard")
 
 # Librarian view
+@login_required
 @user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'librarian_dashboard.html')
 
 # Member view
+@login_required
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'member_dashboard.html')
