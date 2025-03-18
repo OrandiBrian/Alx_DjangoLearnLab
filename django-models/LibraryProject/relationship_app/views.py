@@ -51,37 +51,31 @@ def login_user(request):
 # logout user
 def logout_user(request):
     logout(request)
-    return render(request, 'relationship_app/logout.html')
-
-@login_required
-def logout_user(request):
-    logout(request)
-    return render(request, 'relationship_app/logout.html')
+    return redirect('login')
 
 # Helper functions to check roles
+# check if user is admin
 def is_admin(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return user.userprofile.role == 'Admin'
 
-def is_librarian(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
-
-def is_member(user):
-    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
-
-# Admin view
 @login_required
 @user_passes_test(is_admin)
 def admin_view(request):
-    # return render(request, 'admin_dashboard.html')
-    return HttpResponse("Welcome to the Admin Dashboard")
+    return render(request, 'admin_dashboard.html')
 
-# Librarian view
+# check if user is librarian
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
 @login_required
 @user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'librarian_dashboard.html')
 
-# Member view
+# check if user is a member
+def is_member(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
 @login_required
 @user_passes_test(is_member)
 def member_view(request):
