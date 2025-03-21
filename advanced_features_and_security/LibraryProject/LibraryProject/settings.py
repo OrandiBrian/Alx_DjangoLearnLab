@@ -23,10 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4=%v98$i4zlo6=ptuv5fqitm_l&2^sos3d=ot6&j4javj1p=lp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# Secure browser protections
+SECURE_BROWSER_XSS_FILTER = True  # Helps prevent XSS attacks
+X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking attacks
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents MIME-type sniffing attacks
+
+# Ensure secure HTTP headers
+SECURE_HSTS_SECONDS = 31536000  # Enables HTTP Strict Transport Security (HSTS) for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Secure cookies
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are only sent over HTTPS
 
 # Application definition
 
@@ -38,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +62,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
+
+CSP_DEFAULT_SRC = ("'self'",)  # Blocks scripts from external sources
+CSP_SCRIPT_SRC = ("'self'", 'trusted-scripts.com')  # Allow scripts only from safe sources
+CSP_STYLE_SRC = ("'self'", 'trusted-styles.com')  # Same for CSS files
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
