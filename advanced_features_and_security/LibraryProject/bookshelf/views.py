@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Book
 from django.contrib.auth.decorators import permission_required
+from .forms import ExampleForm
 
 @permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
@@ -11,7 +12,7 @@ def book_list(request):
 
 @permission_required('bookshelf.can_create', raise_exception=True)
 def add_book(request):
-    """Function-based view for the create book/ URL."""
+    """Function-based view for the create book/Book.objects.get(pk=book_id)) URL."""
     if request.method == 'POST':
         title = request.POST.get('title')
         author = request.POST.get('author')
