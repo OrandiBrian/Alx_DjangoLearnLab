@@ -44,3 +44,7 @@ def home(request):
 # post view
 def posts(request):
     return render(request, "blog/blog_post.html")
+
+# profile view
+def profile(request):
+    return render(request, "blog/profile.html")
